@@ -124,8 +124,9 @@
             if (state.github) {
               toast("Static hosting detected — Save now commits changes to GitHub", "ok");
             } else {
+              showStaticBanner();
               toast(
-                "Server mode is off — edit here, then use Export and upload content.json to your host",
+                "This host can't save directly — connect GitHub in Publishing to make Save publish your edits",
                 "err"
               );
             }
@@ -689,6 +690,7 @@
     $("#ghToken").value = "";
     initGithubUI();
     enableSaveForMode();
+    if (!state.serverMode) showStaticBanner();
     setGhStatus("Disconnected — use Export to download content.json manually.", "ok");
   }
 
@@ -713,10 +715,17 @@
       $("#ghSummary").textContent =
         state.github.repo + " @" + state.github.branch + " (" + state.github.path + ")";
       renderLastSync();
+      var banner = $("#staticBanner");
+      if (banner) banner.classList.add("hidden");
     } else {
       $("#githubFields").classList.remove("hidden");
       $("#githubConnected").classList.add("hidden");
     }
+  }
+
+  function showStaticBanner() {
+    var banner = $("#staticBanner");
+    if (banner) banner.classList.remove("hidden");
   }
 
   function enableSaveForMode() {
@@ -971,20 +980,25 @@
     reader.readAsText(file);
   }
 
+  function switchPanel(name) {
+    $all(".nav-item").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-panel") === name);
+    });
+    $all(".panel").forEach(function (p) {
+      p.classList.toggle("active", p.id === "panel-" + name);
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   function bindUI() {
     $all(".nav-item").forEach(function (btn) {
       btn.addEventListener("click", function () {
-        $all(".nav-item").forEach(function (b) {
-          b.classList.remove("active");
-        });
-        btn.classList.add("active");
-        $all(".panel").forEach(function (p) {
-          p.classList.remove("active");
-        });
-        var target = $("#panel-" + btn.getAttribute("data-panel"));
-        if (target) target.classList.add("active");
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        switchPanel(btn.getAttribute("data-panel"));
       });
+    });
+
+    $("#btnGotoPublish").addEventListener("click", function () {
+      switchPanel("publish");
     });
 
     $("#btnSave").addEventListener("click", save);

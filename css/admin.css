@@ -583,6 +583,43 @@ select {
 }
 
 /* ==========================================================================
+   Static-mode banner
+   ========================================================================== */
+
+.static-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 13px 22px;
+  background: #fff7e6;
+  border-bottom: 1.5px solid #f0dcae;
+  font-size: 0.9rem;
+  color: #6b5416;
+}
+
+.static-banner code {
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 5px;
+  padding: 1px 6px;
+  font-size: 0.82em;
+}
+
+.static-banner .btn-mini {
+  flex-shrink: 0;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+.static-banner .btn-mini:hover {
+  background: var(--accent-deep);
+  border-color: var(--accent-deep);
+}
+
+/* ==========================================================================
    Publishing (GitHub mode)
    ========================================================================== */
 

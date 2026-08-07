@@ -54,6 +54,15 @@
       </div>
     </header>
 
+    <div id="staticBanner" class="static-banner hidden">
+      <span>
+        💡 This host can't save files directly. <strong>Connect GitHub</strong> in the
+        Publishing tab to make <em>Save changes</em> publish your edits automatically —
+        or use <strong>Export</strong> to download <code>content.json</code>.
+      </span>
+      <button id="btnGotoPublish" class="btn-mini" type="button">Connect GitHub</button>
+    </div>
+
     <div class="body">
       <nav class="sidenav" aria-label="Editor sections">
         <button class="nav-item active" data-panel="brand" type="button">Brand &amp; Contact</button>
@@ -299,6 +308,6 @@
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <script src="/js/admin.js?v=4" defer></script>
+  <script src="/js/admin.js?v=5" defer></script>
 </body>
 </html>
