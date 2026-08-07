@@ -66,6 +66,7 @@
         <button class="nav-item" data-panel="visit" type="button">Visit &amp; Booking</button>
         <button class="nav-item" data-panel="hours" type="button">Opening Hours</button>
         <button class="nav-item" data-panel="schema" type="button">Search / SEO</button>
+        <button class="nav-item" data-panel="publish" type="button">Publishing</button>
       </nav>
 
       <main class="main">
@@ -243,12 +244,61 @@
           <p class="panel-hint">Tip: the page title and description live in <code>index.html</code> — ask your developer if you need those changed.</p>
         </section>
 
+        <!-- Publishing -->
+        <section class="panel" id="panel-publish" data-panel-body="publish">
+          <h2>Publishing</h2>
+          <p class="panel-hint">Choose how your edits go live. No code needed — this is the one-time setup.</p>
+
+          <div class="card">
+            <h3 class="card-title">How saving works here</h3>
+            <ul class="mode-list">
+              <li><strong>GitHub (recommended on this host):</strong> connect your website's repository below, then press <em>Save changes</em> as usual — the editor commits your new <code>content.json</code> and the site updates automatically after redeploy.</li>
+              <li><strong>Built-in server:</strong> if this editor runs on a server (like the demo on localhost), <em>Save changes</em> writes directly to the site — no GitHub needed.</li>
+              <li><strong>Export:</strong> always available — downloads <code>content.json</code> to upload manually anywhere.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Connect GitHub</h3>
+            <div id="githubFields">
+              <div class="grid-2">
+                <div class="field"><label>Repository (owner/name)</label><input id="ghRepo" type="text" placeholder="you/site-repo" autocomplete="off" /></div>
+                <div class="field"><label>Branch</label><input id="ghBranch" type="text" value="main" autocomplete="off" /></div>
+              </div>
+              <div class="field"><label>File this editor updates</label><input id="ghPath" type="text" value="content.json" autocomplete="off" /></div>
+              <div class="field">
+                <label for="ghToken">GitHub token</label>
+                <input id="ghToken" type="password" autocomplete="off" placeholder="github_pat_… or ghp_…" />
+                <p class="field-note">Create one at github.com → Settings → Developer settings → <em>Fine-grained tokens</em> (or classic). Give it <strong>Contents: Read and write</strong> on this repository only. The token is stored only in this browser — anyone with access to this browser can update the site.</p>
+              </div>
+              <div class="btn-row">
+                <button id="btnGhTest" class="btn-mini" type="button">Test connection</button>
+                <button id="btnGhConnect" class="btn-mini" type="button">Connect</button>
+              </div>
+            </div>
+            <div id="githubStatus" class="github-status" role="status"></div>
+            <div id="githubConnected" class="github-connected hidden">
+              <p class="gh-ok">✓ Connected — <strong id="ghSummary"></strong></p>
+              <p class="field-note" id="ghLastSync"></p>
+              <button id="btnGhDisconnect" class="btn-mini btn-danger" type="button">Disconnect</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">Before you rely on Save</h3>
+            <ul class="mode-list">
+              <li>Make sure <strong>Vercel</strong> (or your host) is set to <strong>auto-deploy on push</strong> to the branch above — then every Save goes live on its own.</li>
+              <li>Keep the repository reachable: the editor commits only <code>content.json</code> (and photos you upload) — it never touches any other file.</li>
+            </ul>
+          </div>
+        </section>
+
       </main>
     </div>
   </div>
 
   <div id="toasts" class="toasts" aria-live="polite"></div>
 
-  <script src="/js/admin.js?v=3" defer></script>
+  <script src="/js/admin.js?v=4" defer></script>
 </body>
 </html>

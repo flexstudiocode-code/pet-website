@@ -51,18 +51,37 @@ installer in `deploy/` (`setup_server.sh`, systemd unit, keep-alive cron).
   - `POST /api/config` — save `content.json` (passcode required)
   - `POST /api/upload` — photo uploads, saved to `uploads/`
 - **`admin/index.html`** — the client editor at `/admin` (login, sections, add/remove/reorder
-  cards, photo upload, export/import JSON).
+  cards, photo upload, export/import JSON, and GitHub publishing under **Publishing**).
 
 ## Static hosting without Python
 
 If the site is hosted somewhere without a server (plain file upload, cPanel,
-GitHub Pages, etc.) the editor still works in a reduced mode:
+GitHub Pages, Vercel, etc.) the editor still works:
+
+### Option A — save straight to GitHub (recommended on Vercel)
+
+On hosts that deploy from a GitHub repo, connect the editor to the repo once
+(admin → **Publishing** → **Connect GitHub**):
+
+1. Create a GitHub fine-grained token with **Contents: Read and write** on the
+   site's repository (github.com → Settings → Developer settings → Fine-grained
+   tokens).
+2. Enter the repository (`owner/name`), branch, file path and the token, then
+   press **Test connection** and **Connect**. The token is stored only in the
+   browser.
+3. The client now presses **Save changes** as usual — the editor commits the
+   new `content.json` to the repo, and the host's auto-deploy makes the change
+   go live (Vercel: enable *Git integration* so pushes to the branch
+   auto-deploy). Photo uploads go to the repo's `uploads/` folder too.
+
+### Option B — Export / upload
 
 - Open `/admin`, edit the content, press **Export** to download a fresh
   `content.json`, then upload that file next to `index.html` on the host.
 - The site itself needs no server — it just reads `content.json` when present.
 
-Photo uploads need the server; on static hosting, use image URLs instead.
+Photo uploads on a plain static host (no GitHub, no server) need image URLs
+instead of uploads.
 
 ## Security notes
 

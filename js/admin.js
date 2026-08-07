@@ -13,6 +13,7 @@
     content: null,
     serverMode: false,
     passcode: sessionStorage.getItem("cmsPasscode") || "",
+    github: loadGithub(),
     dirty: false,
     saving: false
   };
@@ -67,7 +68,7 @@
       el.textContent = "Unsaved changes…";
       el.classList.add("dirty");
     } else {
-      el.textContent = state.serverMode ? "All changes saved" : "Ready";
+      el.textContent = state.serverMode || state.github ? "All changes saved" : "Ready";
       el.classList.remove("dirty");
     }
   }
@@ -120,10 +121,14 @@
             state.serverMode = false;
             state.content = content;
             enterEditor();
-            toast(
-              "Server mode is off — edit here, then use Export and upload content.json to your host",
-              "err"
-            );
+            if (state.github) {
+              toast("Static hosting detected — Save now commits changes to GitHub", "ok");
+            } else {
+              toast(
+                "Server mode is off — edit here, then use Export and upload content.json to your host",
+                "err"
+              );
+            }
           })
           .catch(function () {
             toast("Could not load content.json", "err");
@@ -169,11 +174,7 @@
   function enterEditor() {
     $("#login").classList.add("hidden");
     $("#editor").classList.remove("hidden");
-    if (!state.serverMode) {
-      var btn = $("#btnSave");
-      btn.disabled = true;
-      btn.textContent = "Server offline";
-    }
+    enableSaveForMode();
     populate();
     bindUI();
     markDirty(false);
@@ -447,8 +448,12 @@
   }
 
   function uploadImage(file, done) {
+    if (state.github) {
+      githubUpload(file, done);
+      return;
+    }
     if (!state.serverMode) {
-      done("uploads need the server running");
+      done("uploads need the server running — or connect GitHub in Publishing");
       return;
     }
     fetch(
@@ -472,16 +477,435 @@
       });
   }
 
+  /* ---------------- GitHub publishing (static hosts) ---------------- */
+
+  function loadGithub() {
+    try {
+      var saved = JSON.parse(localStorage.getItem("cmsGitHub"));
+      if (saved && saved.repo && saved.token) return saved;
+    } catch (e) {}
+    return null;
+  }
+
+  function persistGithub(cfg) {
+    if (cfg) localStorage.setItem("cmsGitHub", JSON.stringify(cfg));
+    else localStorage.removeItem("cmsGitHub");
+    state.github = cfg;
+  }
+
+  function ghAuth(token) {
+    var h = {
+      Accept: "application/vnd.github+json",
+      "Content-Type": "application/json"
+    };
+    if (token) h.Authorization = "Bearer " + token;
+    return h;
+  }
+
+  function ghPath(path) {
+    return path
+      .split("/")
+      .map(encodeURIComponent)
+      .join("/");
+  }
+
+  function parseRes(r) {
+    return r
+      .json()
+      .then(function (d) {
+        return { status: r.status, data: d };
+      })
+      .catch(function () {
+        return { status: r.status, data: {} };
+      });
+  }
+
+  function verifyToken(token, done) {
+    fetch("https://api.github.com/user", { headers: ghAuth(token) })
+      .then(parseRes)
+      .then(function (res) {
+        done(null, res);
+      })
+      .catch(function (e) {
+        done(e && e.message ? e.message : "network error");
+      });
+  }
+
+  function ghGet(cfg, done) {
+    var url =
+      "https://api.github.com/repos/" +
+      cfg.repo +
+      "/contents/" +
+      ghPath(cfg.path) +
+      "?ref=" +
+      encodeURIComponent(cfg.branch);
+    fetch(url, { headers: ghAuth(cfg.token) })
+      .then(parseRes)
+      .then(function (res) {
+        done(null, res);
+      })
+      .catch(function (e) {
+        done(e && e.message ? e.message : "network error");
+      });
+  }
+
+  function apiErr(res) {
+    if (res.status === 401 || res.status === 403) return "auth";
+    return (res.data && res.data.message) || "GitHub returned " + res.status;
+  }
+
+  function setGhStatus(msg, kind) {
+    var el = $("#githubStatus");
+    el.textContent = msg;
+    el.className =
+      "github-status" + (kind === "ok" ? " ok" : kind === "err" ? " err" : "");
+  }
+
+  function readGhForm() {
+    var repo = $("#ghRepo")
+      .value.trim()
+      .replace(/^https?:\/\/github\.com\//, "")
+      .replace(/\.git$/, "")
+      .replace(/\/+$/, "");
+    if (!repo) {
+      setGhStatus("Enter the repository as owner/name.", "err");
+      return null;
+    }
+    if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo)) {
+      setGhStatus("The repository should look like owner/name.", "err");
+      return null;
+    }
+    return {
+      repo: repo,
+      branch: $("#ghBranch").value.trim() || "main",
+      path: $("#ghPath").value.trim() || "content.json",
+      token: $("#ghToken").value.trim()
+    };
+  }
+
+  function testGithub() {
+    var cfg = readGhForm();
+    if (!cfg) return;
+    setGhStatus("Testing…", "");
+    ghGet(cfg, function (err, res) {
+      if (err) return setGhStatus("Can't reach GitHub: " + err, "err");
+      if (res.status === 200) {
+        if (cfg.token) {
+          /* A read-only GET succeeds on public repos even with a bogus
+             token (GitHub treats it as anonymous), so verify the token
+             itself against /user before claiming it works. */
+          verifyToken(cfg.token, function (err2, res2) {
+            if (err2) return setGhStatus("Can't reach GitHub: " + err2, "err");
+            if (res2.status === 200) {
+              setGhStatus(
+                "✓ Connected — " +
+                  cfg.repo +
+                  " @" +
+                  cfg.branch +
+                  " is reachable and the token is valid. Press Connect to finish.",
+                "ok"
+              );
+            } else {
+              setGhStatus(
+                "The token looks invalid (GitHub rejected it) — check it's copied fully and hasn't expired.",
+                "err"
+              );
+            }
+          });
+        } else {
+          setGhStatus(
+            "The repository is reachable, but no token was entered — saving won't work without one.",
+            "err"
+          );
+        }
+      } else if (res.status === 401 || res.status === 403) {
+        setGhStatus(
+          "Token rejected — check its permissions (it needs Contents: Read and write on this repo).",
+          "err"
+        );
+      } else if (res.status === 404) {
+        setGhStatus("Not found — check the repository, branch and file path.", "err");
+      } else {
+        setGhStatus(
+          "Unexpected response (" + res.status + "): " + (res.data.message || ""),
+          "err"
+        );
+      }
+    });
+  }
+
+  function connectGithub() {
+    var cfg = readGhForm();
+    if (!cfg) return;
+    if (!cfg.token) {
+      setGhStatus("Enter a token to connect.", "err");
+      return;
+    }
+    setGhStatus("Connecting…", "");
+    verifyToken(cfg.token, function (err, res) {
+      if (err) return setGhStatus("Can't reach GitHub: " + err, "err");
+      if (res.status !== 200) {
+        return setGhStatus(
+          "The token was rejected — check it's copied fully and hasn't expired.",
+          "err"
+        );
+      }
+      ghGet(cfg, function (err2, res2) {
+        if (err2) return setGhStatus("Can't reach GitHub: " + err2, "err");
+        if (res2.status !== 200) {
+          return setGhStatus(
+            "Connection failed — the repository wasn't found; press Test connection for details.",
+            "err"
+          );
+        }
+        state.github = {
+          repo: cfg.repo,
+          branch: cfg.branch,
+          path: cfg.path,
+          token: cfg.token,
+          sha: (res2.data && res2.data.sha) || null
+        };
+        persistGithub(state.github);
+        initGithubUI();
+        enableSaveForMode();
+        setGhStatus(
+          "Connected — your edits now save to GitHub. If the first save fails, the token is missing Contents: write access.",
+          "ok"
+        );
+        if (!state.serverMode) {
+          toast("Save changes will now publish to " + state.github.repo, "ok");
+        } else {
+          toast(
+            "Note: Save now publishes to GitHub — the local server file is left untouched",
+            "ok"
+          );
+        }
+      });
+    });
+  }
+
+  function disconnectGithub() {
+    persistGithub(null);
+    $("#ghToken").value = "";
+    initGithubUI();
+    enableSaveForMode();
+    setGhStatus("Disconnected — use Export to download content.json manually.", "ok");
+  }
+
+  function setLastSync() {
+    localStorage.setItem("cmsGitHubLastSync", new Date().toISOString());
+    renderLastSync();
+  }
+
+  function renderLastSync() {
+    var t = localStorage.getItem("cmsGitHubLastSync");
+    $("#ghLastSync").textContent = t
+      ? "Last published " +
+        new Date(t).toLocaleString() +
+        " — the live site rebuilds within about a minute."
+      : "";
+  }
+
+  function initGithubUI() {
+    if (state.github) {
+      $("#githubFields").classList.add("hidden");
+      $("#githubConnected").classList.remove("hidden");
+      $("#ghSummary").textContent =
+        state.github.repo + " @" + state.github.branch + " (" + state.github.path + ")";
+      renderLastSync();
+    } else {
+      $("#githubFields").classList.remove("hidden");
+      $("#githubConnected").classList.add("hidden");
+    }
+  }
+
+  function enableSaveForMode() {
+    var btn = $("#btnSave");
+    if (state.github || state.serverMode) {
+      btn.disabled = false;
+      btn.textContent = "Save changes";
+    } else {
+      btn.disabled = true;
+      btn.textContent = "Set up publishing";
+    }
+  }
+
+  function pushToGithub(content, done) {
+    var gh = state.github;
+    var encoded;
+    try {
+      encoded = btoa(
+        unescape(encodeURIComponent(JSON.stringify(content, null, 2) + "\n"))
+      );
+    } catch (e) {
+      return done("could not encode the content");
+    }
+
+    function doPut(sha, cb) {
+      var body = {
+        message: "Update site content via CMS",
+        content: encoded,
+        branch: gh.branch
+      };
+      if (sha) body.sha = sha;
+      fetch(
+        "https://api.github.com/repos/" + gh.repo + "/contents/" + ghPath(gh.path),
+        {
+          method: "PUT",
+          headers: ghAuth(gh.token),
+          body: JSON.stringify(body)
+        }
+      )
+        .then(parseRes)
+        .then(function (res) {
+          cb(null, res);
+        })
+        .catch(function (e) {
+          cb(e && e.message ? e.message : "network error");
+        });
+    }
+
+    function saveSha(res, doneCb) {
+      if (!state.github) return doneCb("disconnected");
+      state.github.sha = res.data.content.sha;
+      persistGithub(state.github);
+      return doneCb(null, res.data.content.html_url);
+    }
+
+    doPut(gh.sha, function (err, res) {
+      if (err) return done(err);
+      if (res.status === 200 || res.status === 201) return saveSha(res, done);
+      if (res.status === 409) {
+        /* Someone else updated the file since we loaded it — fetch the
+           latest SHA and retry once. */
+        return ghGet(gh, function (e2, res2) {
+          if (e2) return done(e2);
+          if (res2.status !== 200 || !res2.data.sha) {
+            return done("conflict — the file changed elsewhere; refresh and try again");
+          }
+          doPut(res2.data.sha, function (e3, res3) {
+            if (e3) return done(e3);
+            if (res3.status === 200 || res3.status === 201) return saveSha(res3, done);
+            done(apiErr(res3));
+          });
+        });
+      }
+      done(apiErr(res));
+    });
+  }
+
+  function githubUpload(file, done) {
+    var gh = state.github;
+    if (!gh) return done("no GitHub connection");
+    if (file.size > 10 * 1024 * 1024) {
+      return done("photo is larger than 10 MB");
+    }
+    var safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    var path = "uploads/" + Date.now() + "-" + safe;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var dataUrl = reader.result;
+      var base64 = dataUrl.slice(dataUrl.indexOf(",") + 1);
+      fetch(
+        "https://api.github.com/repos/" + gh.repo + "/contents/" + ghPath(path),
+        {
+          method: "PUT",
+          headers: ghAuth(gh.token),
+          body: JSON.stringify({
+            message: "Add photo via CMS",
+            content: base64,
+            branch: gh.branch
+          })
+        }
+      )
+        .then(parseRes)
+        .then(function (res) {
+          if (res.status === 200 || res.status === 201) {
+            var url =
+              "https://raw.githubusercontent.com/" +
+              gh.repo +
+              "/" +
+              encodeURIComponent(gh.branch) +
+              "/" +
+              ghPath(path);
+            done(null, url);
+          } else {
+            var e = apiErr(res);
+            done(e === "auth" ? "the GitHub token can't write to the repo" : e);
+          }
+        })
+        .catch(function (e) {
+          done(e && e.message ? e.message : "network error");
+        });
+    };
+    reader.onerror = function () {
+      done("could not read the file");
+    };
+    reader.readAsDataURL(file);
+  }
+
   /* ---------------- actions ---------------- */
 
+  function nowStamp() {
+    function p(n) {
+      return (n < 10 ? "0" : "") + n;
+    }
+    var d = new Date();
+    return (
+      d.getFullYear() +
+      "-" +
+      p(d.getMonth() + 1) +
+      "-" +
+      p(d.getDate()) +
+      " " +
+      p(d.getHours()) +
+      ":" +
+      p(d.getMinutes()) +
+      ":" +
+      p(d.getSeconds())
+    );
+  }
+
   function save() {
+    if (state.saving) return;
+    var btn = $("#btnSave");
+    var content = collect();
+
+    /* GitHub mode (static hosts like Vercel): commit content.json to the
+       repo — the host's auto-deploy makes the change live. */
+    if (state.github) {
+      content.lastEdited = nowStamp();
+      state.saving = true;
+      btn.disabled = true;
+      btn.textContent = "Saving to GitHub…";
+      pushToGithub(content, function (err) {
+        state.saving = false;
+        btn.disabled = false;
+        btn.textContent = "Save changes";
+        if (err) {
+          if (err === "auth") {
+            toast(
+              "GitHub token was rejected — reconnect it in the Publishing section",
+              "err"
+            );
+          } else {
+            toast("Could not save: " + err, "err");
+          }
+        } else {
+          markDirty(false);
+          setLastSync();
+          toast("Saved to GitHub — your website updates in about a minute", "ok");
+        }
+      });
+      return;
+    }
+
     if (!state.serverMode) {
-      toast("Server mode is off — use Export instead", "err");
+      toast("Nothing connected — use Export and upload content.json to your host", "err");
       return;
     }
     if (state.saving) return;
     state.saving = true;
-    var btn = $("#btnSave");
     btn.disabled = true;
     btn.textContent = "Saving…";
 
@@ -581,6 +1005,11 @@
       $("#loginError").textContent = "";
       showLogin();
     });
+
+    $("#btnGhTest").addEventListener("click", testGithub);
+    $("#btnGhConnect").addEventListener("click", connectGithub);
+    $("#btnGhDisconnect").addEventListener("click", disconnectGithub);
+    initGithubUI();
 
     $all("[data-cfg]").forEach(function (el) {
       el.addEventListener("input", markDirty);
