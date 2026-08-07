@@ -5,7 +5,7 @@
  Paw & Glow — Local web server + client content API
 ============================================================================
 Drop-in replacement for `python -m http.server` that also powers the
-client CMS (admin.html). Run:
+client CMS (at /admin). Run:
 
     python server.py [port]        (default port 8766)
 
@@ -228,7 +228,7 @@ def main():
     print("=" * 60)
     print(" Paw & Glow server running")
     print("   Site    : http://127.0.0.1:%d/" % port)
-    print("   Admin   : http://127.0.0.1:%d/admin.html" % port)
+    print("   Admin   : http://127.0.0.1:%d/admin" % port)
     print("   API     : /api/config  /api/verify  /api/upload")
     print("   Passcode: %s (see admin-secret.json)" % load_secret())
     print("=" * 60)

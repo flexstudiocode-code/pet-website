@@ -15,7 +15,7 @@ start "Pet Server" /min python server.py 8766
 timeout /t 2 /nobreak >nul
 :server_ok
 echo Local server is running on port 8766.
-echo Client CMS: http://localhost:8766/admin.html  (default passcode: pawandglow)
+echo Client CMS: http://localhost:8766/admin  (default passcode: pawandglow)
 echo.
 
 REM ---------- 2) cloudflared (downloaded automatically if missing) ----------

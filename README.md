@@ -14,7 +14,7 @@ Or double-click `start-tunnel.bat` to also get a public Cloudflare link.
 | What                  | URL                          |
 | --------------------- | ---------------------------- |
 | Website               | `http://localhost:8766/`     |
-| Client editor (CMS)   | `http://localhost:8766/admin.html` |
+| Client editor (CMS)   | `http://localhost:8766/admin` |
 
 ## Going live (free, always-on, automatic admin saves)
 
@@ -50,7 +50,7 @@ installer in `deploy/` (`setup_server.sh`, systemd unit, keep-alive cron).
   - `POST /api/verify` — passcode check for the login screen
   - `POST /api/config` — save `content.json` (passcode required)
   - `POST /api/upload` — photo uploads, saved to `uploads/`
-- **`admin.html`** — the client editor (login, sections, add/remove/reorder
+- **`admin/index.html`** — the client editor at `/admin` (login, sections, add/remove/reorder
   cards, photo upload, export/import JSON).
 
 ## Static hosting without Python
@@ -58,7 +58,7 @@ installer in `deploy/` (`setup_server.sh`, systemd unit, keep-alive cron).
 If the site is hosted somewhere without a server (plain file upload, cPanel,
 GitHub Pages, etc.) the editor still works in a reduced mode:
 
-- Open `admin.html`, edit the content, press **Export** to download a fresh
+- Open `/admin`, edit the content, press **Export** to download a fresh
   `content.json`, then upload that file next to `index.html` on the host.
 - The site itself needs no server — it just reads `content.json` when present.
 
@@ -68,7 +68,7 @@ Photo uploads need the server; on static hosting, use image URLs instead.
 
 - The passcode travels over HTTP — fine for the demo tunnel, but use HTTPS
   (e.g. Cloudflare) or put the server behind authentication for production.
-- Google indexes the site, not `admin.html` (it carries `noindex`).
+- Google indexes the site, not the editor at `/admin` (it carries `noindex`).
 
 ## Files
 
@@ -78,7 +78,7 @@ css/styles.css    website styles
 js/config.js      developer settings (name, WhatsApp, demo tier)
 js/main.js        website behaviour + reads content.json
 content.json      editable content (written by the CMS)
-admin.html        client editor
+admin/index.html  client editor (served at /admin)
 css/admin.css     editor styles
 js/admin.js       editor logic
 server.py         local server + content API

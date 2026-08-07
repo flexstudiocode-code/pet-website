@@ -62,9 +62,8 @@ On the VPS:
 sudo apt-get update && sudo apt-get install -y python3
 
 # 2. Get the site files onto the server. Easiest options:
-#    a) upload from your PC (run from this repo folder on your machine):
-#       scp -i ~/.ssh/oracle_key -r index.html admin.html content.json server.py css js deploy ubuntu@<PUBLIC_IP>:~/
-#    b) or zip it up and upload:  zip -r site.zip . -x "deploy" && scp ... && unzip site.zip
+#    a) upload from your PC (run from this repo folder on your machine):#       scp -i ~/.ssh/oracle_key -r index.html admin content.json server.py css js deploy ubuntu@<PUBLIC_IP>:~/
+#       b) or zip it up and upload:  zip -r site.zip . -x "deploy" && scp ... && unzip site.zip
 ```
 
 Then, inside the folder on the VPS:
@@ -143,7 +142,7 @@ choose SSL mode **Flexible** in Cloudflare.
 
 1. `https://yourdomain.com/` — the site loads over HTTPS.
 2. `https://yourdomain.com/health` — `{"ok": true, ...}`.
-3. `https://yourdomain.com/admin.html` — the login screen appears.
+3. `https://yourdomain.com/admin` — the login screen appears.
 4. Log in, change something (e.g. the tagline), press **Save changes**.
 5. Reload the public site — the change is live. That's the client's entire
    workflow from now on.
@@ -234,4 +233,4 @@ installer → drop the tarball's `content.json` and `uploads/` back into
 - [ ] `sudo apt-get update && sudo apt-get upgrade` on the VPS
 - [ ] Backups running (Part 6)
 
-The `admin.html` page is already `noindex`, so Google won't index the editor.
+The editor at `/admin` is already `noindex`, so Google won't index it.

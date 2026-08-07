@@ -109,8 +109,9 @@
         startLogin();
       })
       .catch(function () {
-        /* Static hosting fallback: read content.json directly. */
-        fetch("content.json", { cache: "no-store" })
+        /* Static hosting fallback: read content.json directly (absolute
+           path so it works from /admin as well as /admin.html). */
+        fetch("/content.json", { cache: "no-store" })
           .then(function (r) {
             if (!r.ok) throw new Error("no content.json");
             return r.json();

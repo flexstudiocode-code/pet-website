@@ -1,7 +1,7 @@
 /* ==========================================================================
    Paw & Glow — Site configuration (developer settings)
    ==========================================================================
-   Your client edits the site content themselves at /admin.html (stored in
+   Your client edits the site content themselves at /admin (stored in
    content.json). This file is for developer-only switches: the demo Base/Pro
    toggle and its default tier. Set demoMode to false before going live.
    ========================================================================== */
