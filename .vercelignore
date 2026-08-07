@@ -1,0 +1,5 @@
+.freebuff/
+.vercel/
+uploads/
+admin-secret.json
+desktop-v2.db*
