@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Paw &amp; Glow — Modern Pet Grooming Studio</title>
   <meta name="description" content="Gentle, judgment-free grooming for dogs and cats. Full grooms, de-shedding, puppy first grooms and fear-free cat care. Book online in 60 seconds." />
   <meta name="theme-color" content="#E2603C" />
@@ -10,6 +10,11 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%B1%3C/text%3E%3C/svg%3E" />
 
   <link rel="preconnect" href="https://images.unsplash.com" />
+  <!-- Preload the LCP hero image (mirrors the img srcset so only the
+       candidate the browser will actually use is fetched) -->
+  <link rel="preload" as="image" fetchpriority="high"
+    imagesrcset="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=450&q=75 450w, https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=750&q=75 750w, https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=900&q=80 900w, https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=1200&q=80 1200w"
+    imagesizes="(min-width: 861px) min(45vw, 540px), 92vw" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -71,7 +76,7 @@
           <li data-tier="pro"><a href="#reviews">Reviews</a></li>
           <li><a href="#visit">Visit</a></li>
         </ul>
-        <a class="btn btn-primary btn-sm nav-cta" href="#visit">Book a Groom</a>
+        <a class="btn btn-primary btn-sm nav-cta" href="#visit" data-config="bookCta">Book a Groom</a>
       </div>
     </nav>
   </header>
@@ -82,13 +87,13 @@
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy reveal">
-          <p class="eyebrow">Pet grooming studio · Est. 2019</p>
+          <p class="eyebrow" data-config="heroEyebrow">Pet grooming studio · Est. 2019</p>
           <h1>Where every pet leaves <span class="accent">feeling their best</span></h1>
-          <p class="lead">Gentle, judgment-free grooming for dogs and cats — from a puppy&rsquo;s first bath to a full show-style trim. One-on-one care, no cages, no stress.</p>
+          <p class="lead" data-config="heroLead">Gentle, judgment-free grooming for dogs and cats — from a puppy&rsquo;s first bath to a full show-style trim. One-on-one care, no cages, no stress.</p>
           <div class="hero-cta">
-            <a class="btn btn-primary" href="#visit">Book a Groom</a>
+            <a class="btn btn-primary" href="#visit" data-config="bookCta">Book a Groom</a>
             <a class="btn btn-ghost" href="#services">
-              Explore services
+              <span data-config="exploreCta">Explore services</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m0 0-6-6m6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
           </div>
@@ -104,12 +109,12 @@
 
         <div class="hero-visual reveal" style="--delay:.15s">
           <div class="hero-img-wrap">
-            <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=900&q=80" alt="A happy puppy enjoying a warm bath during a grooming session" width="900" height="1100" fetchpriority="high" />
+            <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=900&q=80" srcset="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=450&q=75 450w, https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=750&q=75 750w, https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=900&q=80 900w, https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=1200&q=80 1200w" sizes="(min-width: 861px) min(45vw, 540px), 92vw" alt="A happy puppy enjoying a warm bath during a grooming session" width="900" height="1100" fetchpriority="high" decoding="async" />
           </div>
 
           <div class="float-card float-card-top">
             <div class="float-avatar">
-              <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=120&q=80" alt="Biscuit, a golden retriever, after his groom" width="120" height="120" loading="lazy" />
+              <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=120&q=80" alt="Biscuit, a golden retriever, after his groom" width="120" height="120" loading="lazy" decoding="async" />
             </div>
             <div>
               <p class="float-title">Biscuit&rsquo;s glow-up</p>
@@ -152,31 +157,31 @@
     <section class="section why">
       <div class="container">
         <h2 class="section-title reveal">Grooming your pet <span class="accent">actually looks forward to</span></h2>
-        <p class="section-sub reveal">We keep things calm, clean, and honest — for pets and the people who love them.</p>
+        <p class="section-sub reveal" data-config="whySub">We keep things calm, clean, and honest — for pets and the people who love them.</p>
 
         <div class="card-grid three">
           <article class="why-card reveal">
             <div class="why-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M12 21s-7-4.5-9-9c-1.4-3.2.4-7 4-7 2 0 3.5 1 5 3 1.5-2 3-3 5-3 3.6 0 5.4 3.8 4 7-2 4.5-9 9-9 9Z" fill="#E2603C" stroke="#E2603C" stroke-width="1.4" stroke-linejoin="round"/></svg>
             </div>
-            <h3>Certified &amp; gentle</h3>
-            <p>Every groomer is certified and trained in low-stress handling. Your pet is never rushed, never shared with another client, and never left alone in a cage.</p>
+            <h3 data-config="why1Title">Certified &amp; gentle</h3>
+            <p data-config="why1Text">Every groomer is certified and trained in low-stress handling. Your pet is never rushed, never shared with another client, and never left alone in a cage.</p>
           </article>
 
           <article class="why-card reveal" style="--delay:.1s">
             <div class="why-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M12 3v18M3 12h18" stroke="#E2603C" stroke-width="2" stroke-linecap="round"/><path d="m17 5-5 4-5-4" stroke="#E2603C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#E2603C"/></svg>
             </div>
-            <h3>Honest, flat pricing</h3>
-            <p>No surprise add-ons, no upsell pressure. The price you see on the page is the price you pay — every single time.</p>
+            <h3 data-config="why2Title">Honest, flat pricing</h3>
+            <p data-config="why2Text">No surprise add-ons, no upsell pressure. The price you see on the page is the price you pay — every single time.</p>
           </article>
 
           <article class="why-card reveal" style="--delay:.2s">
             <div class="why-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" width="24" height="24" fill="none"><path d="M4 8h16l-1.5 11a2 2 0 0 1-2 1.8h-9a2 2 0 0 1-2-1.8L4 8Z" fill="#E2603C" stroke="#E2603C" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="#E2603C" stroke-width="2" stroke-linecap="round"/></svg>
             </div>
-            <h3>Clean &amp; eco-friendly</h3>
-            <p>We use hypoallergenic, cruelty-free products, sanitized tools between every pet, and a spotless studio you can see for yourself.</p>
+            <h3 data-config="why3Title">Clean &amp; eco-friendly</h3>
+            <p data-config="why3Text">We use hypoallergenic, cruelty-free products, sanitized tools between every pet, and a spotless studio you can see for yourself.</p>
           </article>
         </div>
       </div>
@@ -187,16 +192,16 @@
       <div class="container">
         <div class="section-head reveal">
           <div>
-            <p class="eyebrow">What we do</p>
-            <h2 class="section-title">Services built around your pet</h2>
+            <p class="eyebrow" data-config="servicesEyebrow">What we do</p>
+            <h2 class="section-title" data-config="servicesTitle">Services built around your pet</h2>
           </div>
-          <p class="section-sub">Every service starts with a 5-minute meet-and-greet so your pet can tell us exactly how they&rsquo;d like their day to go.</p>
+          <p class="section-sub" data-config="servicesSub">Every service starts with a 5-minute meet-and-greet so your pet can tell us exactly how they&rsquo;d like their day to go.</p>
         </div>
 
         <div class="card-grid services-grid">
           <article class="service-card reveal">
             <div class="service-img">
-              <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80" alt="A freshly groomed dog wearing a bandana" loading="lazy" width="800" height="600" />
+              <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80" srcset="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&q=75 400w, https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=75 800w, https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=1000&q=75 1000w" sizes="(min-width: 1025px) 361px, (min-width: 641px) 45vw, 92vw" alt="A freshly groomed dog wearing a bandana" loading="lazy" width="800" height="600" decoding="async" />
               <span class="service-tag">Most booked</span>
             </div>
             <div class="service-body">
@@ -211,7 +216,7 @@
 
           <article class="service-card reveal" style="--delay:.08s">
             <div class="service-img">
-              <img src="https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&q=80" alt="A dog being brushed after a bath" loading="lazy" width="800" height="600" />
+              <img src="https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&q=80" srcset="https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=400&q=75 400w, https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&q=75 800w, https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=1000&q=75 1000w" sizes="(min-width: 1025px) 361px, (min-width: 641px) 45vw, 92vw" alt="A dog being brushed after a bath" loading="lazy" width="800" height="600" decoding="async" />
             </div>
             <div class="service-body">
               <h3>Bath &amp; Brush</h3>
@@ -225,7 +230,7 @@
 
           <article class="service-card reveal" style="--delay:.16s">
             <div class="service-img">
-              <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80" alt="A golden retriever relaxed during grooming" loading="lazy" width="800" height="600" />
+              <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80" srcset="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&q=75 400w, https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=75 800w, https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=1000&q=75 1000w" sizes="(min-width: 1025px) 361px, (min-width: 641px) 45vw, 92vw" alt="A golden retriever relaxed during grooming" loading="lazy" width="800" height="600" decoding="async" />
             </div>
             <div class="service-body">
               <h3>De-shedding Treatment</h3>
@@ -239,7 +244,7 @@
 
           <article class="service-card reveal" style="--delay:.24s">
             <div class="service-img">
-              <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&q=80" alt="Two friendly dogs at the grooming studio" loading="lazy" width="800" height="600" />
+              <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&q=80" srcset="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=400&q=75 400w, https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&q=75 800w, https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1000&q=75 1000w" sizes="(min-width: 1025px) 361px, (min-width: 641px) 45vw, 92vw" alt="Two friendly dogs at the grooming studio" loading="lazy" width="800" height="600" decoding="async" />
             </div>
             <div class="service-body">
               <h3>Nail, Paw &amp; Ear Care</h3>
@@ -253,7 +258,7 @@
 
           <article class="service-card reveal" style="--delay:.32s">
             <div class="service-img">
-              <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=80" alt="An adorable puppy waiting for its first groom" loading="lazy" width="800" height="600" />
+              <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=80" srcset="https://images.unsplash.com/photo-1517849845537-4d257902454a?w=400&q=75 400w, https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=75 800w, https://images.unsplash.com/photo-1517849845537-4d257902454a?w=1000&q=75 1000w" sizes="(min-width: 1025px) 361px, (min-width: 641px) 45vw, 92vw" alt="An adorable puppy waiting for its first groom" loading="lazy" width="800" height="600" decoding="async" />
             </div>
             <div class="service-body">
               <h3>Puppy&rsquo;s First Groom</h3>
@@ -267,7 +272,7 @@
 
           <article class="service-card reveal" style="--delay:.4s">
             <div class="service-img">
-              <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800&q=80" alt="A calm cat during a fear-free grooming session" loading="lazy" width="800" height="600" />
+              <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800&q=80" srcset="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&q=75 400w, https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800&q=75 800w, https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=1000&q=75 1000w" sizes="(min-width: 1025px) 361px, (min-width: 641px) 45vw, 92vw" alt="A calm cat during a fear-free grooming session" loading="lazy" width="800" height="600" decoding="async" />
             </div>
             <div class="service-body">
               <h3>Fear-free Cat Grooming</h3>
@@ -286,9 +291,9 @@
     <section class="section reviews" id="reviews" data-tier="pro">
       <div class="container">
         <div class="section-head center reveal">
-          <p class="eyebrow">Reviews</p>
-          <h2 class="section-title">What pet parents say</h2>
-          <p class="section-sub">Unedited words from the people who trust us with their best friends.</p>
+          <p class="eyebrow" data-config="reviewsEyebrow">Reviews</p>
+          <h2 class="section-title" data-config="reviewsTitle">What pet parents say</h2>
+          <p class="section-sub" data-config="reviewsSub">Unedited words from the people who trust us with their best friends.</p>
         </div>
 
         <div class="card-grid three reviews-grid">
@@ -296,7 +301,7 @@
             <div class="stars" aria-hidden="true">★★★★★</div>
             <blockquote>&ldquo;Biscuit used to tremble at the groomer&rsquo;s door. Here, he trots straight in — tail going full speed. The team&rsquo;s patience is unreal.&rdquo;</blockquote>
             <figcaption>
-              <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=120&q=80" alt="Biscuit, the golden retriever" loading="lazy" width="120" height="120" />
+              <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?w=120&q=80" alt="Biscuit, the golden retriever" loading="lazy" width="120" height="120" decoding="async" />
               <div>
                 <p class="reviewer">Maya R.</p>
                 <p class="review-pet">Biscuit · Golden Retriever</p>
@@ -308,7 +313,7 @@
             <div class="stars" aria-hidden="true">★★★★★</div>
             <blockquote>&ldquo;The de-shedding treatment paid for itself within a week of vacuuming. Worth every penny — and Olive comes home genuinely happy.&rdquo;</blockquote>
             <figcaption>
-              <img src="https://images.unsplash.com/photo-1477884213360-7e9d7dcc1e48?w=120&q=80" alt="Olive, the husky" loading="lazy" width="120" height="120" />
+              <img src="https://images.unsplash.com/photo-1477884213360-7e9d7dcc1e48?w=120&q=80" alt="Olive, the husky" loading="lazy" width="120" height="120" decoding="async" />
               <div>
                 <p class="reviewer">James T.</p>
                 <p class="review-pet">Olive · Husky</p>
@@ -320,7 +325,7 @@
             <div class="stars" aria-hidden="true">★★★★★</div>
             <blockquote>&ldquo;Our cat is terrified of strangers, and they handled her like seasoned pros. She came home calm, fluffy and somehow smelling great.&rdquo;</blockquote>
             <figcaption>
-              <img src="https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?w=120&q=80" alt="Miso, the cat" loading="lazy" width="120" height="120" />
+              <img src="https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?w=120&q=80" alt="Miso, the cat" loading="lazy" width="120" height="120" decoding="async" />
               <div>
                 <p class="reviewer">Priya S.</p>
                 <p class="review-pet">Miso · Cat</p>
@@ -330,12 +335,12 @@
         </div>
 
         <div class="gallery reveal">
-          <h3 class="gallery-title">Fresh from the chair</h3>
+          <h3 class="gallery-title" data-config="galleryTitle">Fresh from the chair</h3>
           <div class="gallery-grid">
-            <figure><img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=600&q=80" alt="A happy dog mid-sprint after a grooming session" loading="lazy" width="600" height="450" /></figure>
-            <figure><img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=600&q=80" alt="A patient dog during a session at the studio" loading="lazy" width="600" height="450" /></figure>
-            <figure><img src="https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=600&q=80" alt="A soft, freshly brushed coat after a bath" loading="lazy" width="600" height="450" /></figure>
-            <figure><img src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=600&q=80" alt="A relaxed bulldog enjoying studio time" loading="lazy" width="600" height="450" /></figure>
+            <figure><img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=600&q=80" srcset="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=300&q=75 300w, https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=600&q=75 600w, https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=900&q=75 900w" sizes="(min-width: 1025px) 270px, (min-width: 641px) 45vw, 92vw" alt="A happy dog mid-sprint after a grooming session" loading="lazy" width="600" height="450" decoding="async" /></figure>
+            <figure><img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=600&q=80" srcset="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=300&q=75 300w, https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=600&q=75 600w, https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=900&q=75 900w" sizes="(min-width: 1025px) 270px, (min-width: 641px) 45vw, 92vw" alt="A patient dog during a session at the studio" loading="lazy" width="600" height="450" decoding="async" /></figure>
+            <figure><img src="https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=600&q=80" srcset="https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=300&q=75 300w, https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=600&q=75 600w, https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=900&q=75 900w" sizes="(min-width: 1025px) 270px, (min-width: 641px) 45vw, 92vw" alt="A soft, freshly brushed coat after a bath" loading="lazy" width="600" height="450" decoding="async" /></figure>
+            <figure><img src="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=600&q=80" srcset="https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=300&q=75 300w, https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=600&q=75 600w, https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=900&q=75 900w" sizes="(min-width: 1025px) 270px, (min-width: 641px) 45vw, 92vw" alt="A relaxed bulldog enjoying studio time" loading="lazy" width="600" height="450" decoding="async" /></figure>
           </div>
         </div>
       </div>
@@ -345,9 +350,9 @@
     <section class="section visit" id="visit">
       <div class="container visit-grid">
         <div class="visit-info reveal">
-          <p class="eyebrow">Visit us</p>
-          <h2 class="section-title">Come say hello — we can&rsquo;t wait to meet your pet</h2>
-          <p class="lead">Book ahead and your pet walks straight in. Pop-ins are welcome for nail trims on weekdays.</p>
+          <p class="eyebrow" data-config="visitEyebrow">Visit us</p>
+          <h2 class="section-title" data-config="visitTitle">Come say hello — we can&rsquo;t wait to meet your pet</h2>
+          <p class="lead" data-config="visitLead">Book ahead and your pet walks straight in. Pop-ins are welcome for nail trims on weekdays.</p>
 
           <ul class="visit-list">
             <li>
@@ -366,14 +371,14 @@
               <span class="visit-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
               </span>
-              <div><strong>Mon–Sat: 8am–6pm</strong><span>Sunday: 10am–4pm</span></div>
+              <div><strong data-config="visitWeekday">Mon–Sat: 8am–6pm</strong><span data-config="visitSunday">Sunday: 10am–4pm</span></div>
             </li>
           </ul>
         </div>
 
         <form class="booking reveal" id="bookingForm" novalidate>
           <h3>Book a groom</h3>
-          <p class="form-hint">Takes about 60 seconds. No payment needed today.</p>
+          <p class="form-hint" data-config="formHint">Takes about 60 seconds. No payment needed today.</p>
 
           <div class="form-row">
             <label for="f-name">Your name</label>
@@ -417,7 +422,7 @@
             </div>
           </div>
 
-          <button class="btn btn-primary btn-block" type="submit">Request my slot</button>
+          <button class="btn btn-primary btn-block" type="submit" data-config="submitCta">Request my slot</button>
           <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>
       </div>
@@ -455,9 +460,9 @@
       <div class="footer-hours">
         <p class="footer-head">Hours</p>
         <ul>
-          <li>Mon–Fri · 8am–6pm</li>
-          <li>Saturday · 8am–6pm</li>
-          <li>Sunday · 10am–4pm</li>
+          <li data-config="hoursMonFri">Mon–Fri · 8am–6pm</li>
+          <li data-config="hoursSaturday">Saturday · 8am–6pm</li>
+          <li data-config="hoursSunday">Sunday · 10am–4pm</li>
         </ul>
       </div>
 
@@ -485,7 +490,7 @@
     </div>
   </div>
 
-  <script src="js/config.js" defer></script>
-  <script src="js/main.js" defer></script>
+  <script src="js/config.js?v=3" defer></script>
+  <script src="js/main.js?v=3" defer></script>
 </body>
 </html>

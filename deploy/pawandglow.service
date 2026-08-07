@@ -1,0 +1,22 @@
+# Reference template only — deploy/setup_server.sh generates the real unit
+# (with your chosen port/paths). Edit setup_server.sh, not this file.
+[Unit]
+Description=Paw & Glow — website + client CMS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pawandglow
+Group=pawandglow
+WorkingDirectory=/opt/pawandglow
+ExecStart=/usr/bin/python3 /opt/pawandglow/server.py 8766
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/opt/pawandglow
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,207 @@
+{
+  "brand": {
+    "name": "Paw & Glow"
+  },
+  "city": "Kochi",
+  "tagline": "Gentle, modern grooming for dogs and cats in Kannur,Kerala",
+  "contact": {
+    "phoneDisplay": "+91 123456789",
+    "whatsappNumber": "919847001234",
+    "email": "hello@pawandglow.co",
+    "addressLine": "Shop 4, Pearl Plaza, ABC Road",
+    "cityLine": "Kochi, Kerala 682016"
+  },
+  "hero": {
+    "eyebrow": "Pet grooming studio · Est. 2019",
+    "heading": "Where every pet leaves",
+    "accent": "feeling their best",
+    "lead": "Gentle, judgment-free grooming for dogs and cats — from a puppy's first bath to a full show-style trim. One-on-one care, no cages, no stress.",
+    "bookCta": "Book a Groom",
+    "exploreCta": "Explore services",
+    "trust": [
+      "4.9 from 326 reviews",
+      "1,200+ happy pets",
+      "Certified groomers"
+    ]
+  },
+  "why": {
+    "title": "Grooming your pet",
+    "accent": "actually looks forward to",
+    "sub": "We keep things calm, clean, and honest — for pets and the people who love them.",
+    "cards": [
+      {
+        "title": "Certified & gentle",
+        "text": "Every groomer is certified and trained in low-stress handling. Your pet is never rushed, never shared with another client, and never left alone in a cage."
+      },
+      {
+        "title": "Honest, flat pricing",
+        "text": "No surprise add-ons, no upsell pressure. The price you see on the page is the price you pay — every single time."
+      },
+      {
+        "title": "Clean & eco-friendly",
+        "text": "We use hypoallergenic, cruelty-free products, sanitized tools between every pet, and a spotless studio you can see for yourself."
+      }
+    ]
+  },
+  "services": {
+    "eyebrow": "What we do",
+    "title": "Services built around your pet",
+    "sub": "Every service starts with a 5-minute meet-and-greet so your pet can tell us exactly how they'd like their day to go.",
+    "items": [
+      {
+        "title": "Full Groom & Styling",
+        "description": "Bath, brush, haircut and finishing touches styled to your pet's breed — and your taste.",
+        "price": "₹1,499",
+        "duration": "90 min",
+        "tag": "Most booked",
+        "image": "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80"
+      },
+      {
+        "title": "Bath & Brush",
+        "description": "Deep-clean shampoo, conditioner, fluff dry and a tangle-free brush-out for soft, shiny coats.",
+        "price": "₹999",
+        "duration": "60 min",
+        "tag": "",
+        "image": "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=800&q=80"
+      },
+      {
+        "title": "De-shedding Treatment",
+        "description": "Specialized undercoat removal that cuts shedding by up to 90% — fewer tumbleweeds at home.",
+        "price": "₹1,099",
+        "duration": "75 min",
+        "tag": "",
+        "image": "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=800&q=80"
+      },
+      {
+        "title": "Nail, Paw & Ear Care",
+        "description": "Gentle trim, file and polish, plus ear cleaning and paw-pad moisturizing. The finishing touch.",
+        "price": "₹499",
+        "duration": "30 min",
+        "tag": "",
+        "image": "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&q=80"
+      },
+      {
+        "title": "Puppy's First Groom",
+        "description": "A slow, positive introduction to grooming for puppies under 6 months. Treats, praise and patience included.",
+        "price": "₹899",
+        "duration": "45 min",
+        "tag": "",
+        "image": "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800&q=80"
+      },
+      {
+        "title": "Fear-free Cat Grooming",
+        "description": "Low-stress handling, lion cuts and gentle mat removal. Most cats snooze through it. Really.",
+        "price": "₹1,199",
+        "duration": "75 min",
+        "tag": "",
+        "image": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=800&q=80"
+      }
+    ]
+  },
+  "reviews": {
+    "eyebrow": "Reviews",
+    "title": "What pet parents say",
+    "sub": "Unedited words from the people who trust us with their best friends.",
+    "items": [
+      {
+        "quote": "Biscuit used to tremble at the groomer's door. Here, he trots straight in — tail going full speed. The team's patience is unreal.",
+        "reviewer": "Maya R.",
+        "pet": "Biscuit · Golden Retriever",
+        "image": "https://images.unsplash.com/photo-1552053831-71594a27632d?w=120&q=80"
+      },
+      {
+        "quote": "The de-shedding treatment paid for itself within a week of vacuuming. Worth every penny — and Olive comes home genuinely happy.",
+        "reviewer": "James T.",
+        "pet": "Olive · Husky",
+        "image": "https://images.unsplash.com/photo-1477884213360-7e9d7dcc1e48?w=120&q=80"
+      },
+      {
+        "quote": "Our cat is terrified of strangers, and they handled her like seasoned pros. She came home calm, fluffy and somehow smelling great.",
+        "reviewer": "Priya S.",
+        "pet": "Miso · Cat",
+        "image": "https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?w=120&q=80"
+      }
+    ]
+  },
+  "gallery": {
+    "title": "Fresh from the chair",
+    "items": [
+      {
+        "image": "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=600&q=80",
+        "alt": "A happy dog mid-sprint after a grooming session"
+      },
+      {
+        "image": "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=600&q=80",
+        "alt": "A patient dog during a session at the studio"
+      },
+      {
+        "image": "https://images.unsplash.com/photo-1561037404-61cd46aa615b?w=600&q=80",
+        "alt": "A soft, freshly brushed coat after a bath"
+      },
+      {
+        "image": "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?w=600&q=80",
+        "alt": "A relaxed bulldog enjoying studio time"
+      }
+    ]
+  },
+  "visit": {
+    "eyebrow": "Visit us",
+    "title": "Come say hello — we can't wait to meet your pet",
+    "lead": "Book ahead and your pet walks straight in. Pop-ins are welcome for nail trims on weekdays.",
+    "weekday": "Mon–Sat: 8am–6pm",
+    "sunday": "Sunday: 10am–4pm"
+  },
+  "booking": {
+    "hint": "Takes about 60 seconds. No payment needed today.",
+    "submitCta": "Request my slot",
+    "options": [
+      {
+        "value": "full",
+        "label": "Full Groom & Styling — from ₹1,499"
+      },
+      {
+        "value": "bath",
+        "label": "Bath & Brush — from ₹999"
+      },
+      {
+        "value": "deshed",
+        "label": "De-shedding — from ₹1,099"
+      },
+      {
+        "value": "nails",
+        "label": "Nail, Paw & Ear — from ₹499"
+      },
+      {
+        "value": "puppy",
+        "label": "Puppy's First Groom — from ₹899"
+      },
+      {
+        "value": "cat",
+        "label": "Fear-free Cat Groom — from ₹1,199"
+      }
+    ]
+  },
+  "hours": {
+    "monFri": "Mon–Fri · 8am–6pm",
+    "saturday": "Saturday · 8am–6pm",
+    "sunday": "Sunday · 10am–4pm"
+  },
+  "schema": {
+    "streetAddress": "Shop 4, Pearl Plaza, MG Road",
+    "addressLocality": "Kochi",
+    "addressRegion": "Kerala",
+    "postalCode": "682016"
+  },
+  "marquee": [
+    "Full Groom & Styling",
+    "De-shedding",
+    "Puppy First Bath",
+    "Fear-free Cat Care",
+    "Nail & Paw Care",
+    "Breed Styling"
+  ],
+  "_meta": {
+    "version": 1,
+    "lastEdited": "2026-08-07 16:49:03"
+  }
+}

@@ -48,7 +48,261 @@
     }
   }
 
-  applyConfig();
+  /* ---------- Content management system ----------
+     If content.json exists (written by the client admin at /admin.html),
+     its values override the static markup and config.js. Every editable
+     field on the page is covered: headings, contact details, services,
+     reviews, gallery photos, hours and booking options. */
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[c];
+    });
+  }
+
+  function applyContent(content) {
+    if (!content || typeof content !== "object") return;
+
+    /* 1. Flat values consumed by [data-config] elements */
+    var flat = {};
+    if (content.brand) flat.name = content.brand.name;
+    if (content.tagline !== undefined) flat.tagline = content.tagline;
+    if (content.city !== undefined) flat.city = content.city;
+    if (content.contact) {
+      flat.phoneDisplay = content.contact.phoneDisplay;
+      flat.whatsappNumber = content.contact.whatsappNumber;
+      flat.email = content.contact.email;
+      flat.addressLine = content.contact.addressLine;
+      flat.cityLine = content.contact.cityLine;
+    }
+    if (content.hero) {
+      flat.heroEyebrow = content.hero.eyebrow;
+      flat.heroLead = content.hero.lead;
+      flat.bookCta = content.hero.bookCta;
+      flat.exploreCta = content.hero.exploreCta;
+    }
+    if (content.why) {
+      flat.whySub = content.why.sub;
+      (content.why.cards || []).slice(0, 3).forEach(function (card, i) {
+        flat["why" + (i + 1) + "Title"] = card.title;
+        flat["why" + (i + 1) + "Text"] = card.text;
+      });
+    }
+    if (content.services) {
+      flat.servicesEyebrow = content.services.eyebrow;
+      flat.servicesTitle = content.services.title;
+      flat.servicesSub = content.services.sub;
+    }
+    if (content.reviews) {
+      flat.reviewsEyebrow = content.reviews.eyebrow;
+      flat.reviewsTitle = content.reviews.title;
+      flat.reviewsSub = content.reviews.sub;
+    }
+    if (content.gallery) flat.galleryTitle = content.gallery.title;
+    if (content.visit) {
+      flat.visitEyebrow = content.visit.eyebrow;
+      flat.visitTitle = content.visit.title;
+      flat.visitLead = content.visit.lead;
+      flat.visitWeekday = content.visit.weekday;
+      flat.visitSunday = content.visit.sunday;
+    }
+    if (content.booking) {
+      flat.formHint = content.booking.hint;
+      flat.submitCta = content.booking.submitCta;
+    }
+    if (content.hours) {
+      flat.hoursMonFri = content.hours.monFri;
+      flat.hoursSaturday = content.hours.saturday;
+      flat.hoursSunday = content.hours.sunday;
+    }
+    if (content.schema) flat.schema = content.schema;
+    for (var k in flat) {
+      if (flat[k] !== undefined && flat[k] !== null) cfg[k] = flat[k];
+    }
+    applyConfig();
+
+    /* 2. Brand name in header + footer */
+    if (content.brand && content.brand.name) {
+      document.querySelectorAll(".brand-name").forEach(function (el) {
+        el.textContent = content.brand.name;
+      });
+    }
+
+    /* 3. Rebuilt dynamic sections */
+    if (content.hero && content.hero.heading) {
+      var h1 = document.querySelector(".hero-copy h1");
+      if (h1) {
+        var accent = content.hero.accent
+          ? ' <span class="accent">' + escapeHtml(content.hero.accent) + "</span>"
+          : "";
+        h1.innerHTML = escapeHtml(content.hero.heading) + accent;
+      }
+    }
+
+    if (content.hero && Array.isArray(content.hero.trust)) {
+      var trust = document.querySelector(".hero-trust");
+      if (trust) {
+        trust.innerHTML = content.hero.trust
+          .map(function (item, i) {
+            var stars =
+              i === 0
+                ? '<span class="stars" aria-hidden="true">★★★★★</span>'
+                : "";
+            return "<li>" + stars + escapeHtml(item) + "</li>";
+          })
+          .join("");
+      }
+    }
+
+    if (content.why && content.why.title) {
+      var whyTitle = document.querySelector(".why .section-title");
+      if (whyTitle) {
+        var whyAccent = content.why.accent
+          ? ' <span class="accent">' + escapeHtml(content.why.accent) + "</span>"
+          : "";
+        whyTitle.innerHTML = escapeHtml(content.why.title) + whyAccent;
+      }
+    }
+
+    if (content.services && Array.isArray(content.services.items)) {
+      var servicesGrid = document.querySelector(".services-grid");
+      if (servicesGrid) {
+        servicesGrid.innerHTML = content.services.items
+          .map(function (s) {
+            var tag = s.tag
+              ? '<span class="service-tag">' + escapeHtml(s.tag) + "</span>"
+              : "";
+            return (
+              '<article class="service-card">' +
+              '<div class="service-img">' +
+              '<img src="' +
+              escapeHtml(s.image) +
+              '" alt="' +
+              escapeHtml(s.title) +
+              '" loading="lazy" decoding="async" width="800" height="600" />' +
+              tag +
+              "</div>" +
+              '<div class="service-body">' +
+              "<h3>" +
+              escapeHtml(s.title) +
+              "</h3>" +
+              "<p>" +
+              escapeHtml(s.description) +
+              "</p>" +
+              '<div class="service-meta">' +
+              "<span><strong>from " +
+              escapeHtml(s.price) +
+              "</strong></span>" +
+              "<span>" +
+              escapeHtml(s.duration) +
+              "</span>" +
+              "</div>" +
+              "</div>" +
+              "</article>"
+            );
+          })
+          .join("");
+      }
+    }
+
+    if (content.reviews && Array.isArray(content.reviews.items)) {
+      var reviewsGrid = document.querySelector(".reviews-grid");
+      if (reviewsGrid) {
+        reviewsGrid.innerHTML = content.reviews.items
+          .map(function (r) {
+            return (
+              '<figure class="review-card">' +
+              '<div class="stars" aria-hidden="true">★★★★★</div>' +
+              "<blockquote>&ldquo;" +
+              escapeHtml(r.quote) +
+              "&rdquo;</blockquote>" +
+              "<figcaption>" +
+              '<img src="' +
+              escapeHtml(r.image) +
+              '" alt="' +
+              escapeHtml(r.reviewer) +
+              '" loading="lazy" decoding="async" width="120" height="120" />' +
+              "<div>" +
+              '<p class="reviewer">' +
+              escapeHtml(r.reviewer) +
+              "</p>" +
+              '<p class="review-pet">' +
+              escapeHtml(r.pet) +
+              "</p>" +
+              "</div>" +
+              "</figcaption>" +
+              "</figure>"
+            );
+          })
+          .join("");
+      }
+    }
+
+    if (content.gallery && Array.isArray(content.gallery.items)) {
+      var galleryGrid = document.querySelector(".gallery-grid");
+      if (galleryGrid) {
+        galleryGrid.innerHTML = content.gallery.items
+          .map(function (g) {
+            return (
+              "<figure>" +
+              '<img src="' +
+              escapeHtml(g.image) +
+              '" alt="' +
+              escapeHtml(g.alt || "") +
+              '" loading="lazy" decoding="async" width="600" height="450" />' +
+              "</figure>"
+            );
+          })
+          .join("");
+      }
+    }
+
+    if (Array.isArray(content.marquee)) {
+      var track = document.querySelector(".marquee-track");
+      if (track) {
+        var bits = [];
+        for (var copy = 0; copy < 2; copy++) {
+          content.marquee.forEach(function (item) {
+            bits.push("<span>" + escapeHtml(item) + "</span>");
+            bits.push("<span>&middot;</span>");
+          });
+        }
+        track.innerHTML = bits.join("");
+      }
+    }
+
+    if (content.booking && Array.isArray(content.booking.options)) {
+      var select = document.getElementById("f-service");
+      if (select) {
+        var opts =
+          '<option value="" selected disabled>Choose a service</option>';
+        content.booking.options.forEach(function (opt) {
+          opts +=
+            '<option value="' +
+            escapeHtml(opt.value) +
+            '">' +
+            escapeHtml(opt.label) +
+            "</option>";
+        });
+        select.innerHTML = opts;
+      }
+    }
+  }
+
+  fetch("content.json", { cache: "no-store" })
+    .then(function (res) {
+      if (!res.ok) throw new Error("no content.json");
+      return res.json();
+    })
+    .then(applyContent)
+    .catch(function () {
+      /* No content.json — the static markup stays exactly as-is. */
+    });
 
   var header = document.querySelector(".site-header");
   var navToggle = document.getElementById("navToggle");

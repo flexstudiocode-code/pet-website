@@ -1,8 +1,9 @@
 /* ==========================================================================
-   Paw & Glow — Site configuration
+   Paw & Glow — Site configuration (developer settings)
    ==========================================================================
-   This is the ONLY file you need to edit when setting up the site for a
-   new client. Fill in the business details below, upload the site, done.
+   Your client edits the site content themselves at /admin.html (stored in
+   content.json). This file is for developer-only switches: the demo Base/Pro
+   toggle and its default tier. Set demoMode to false before going live.
    ========================================================================== */
 
 var SITE_CONFIG = {

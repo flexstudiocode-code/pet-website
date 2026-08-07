@@ -84,6 +84,17 @@ button {
   color: inherit;
 }
 
+/* Mobile niceties: kill the grey flash on tap and the double-tap zoom delay */
+a,
+button,
+input,
+select,
+textarea,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 :focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 3px;
@@ -649,7 +660,7 @@ h3,
 .demo-toggle {
   position: fixed;
   left: 22px;
-  bottom: 22px;
+  bottom: calc(22px + env(safe-area-inset-bottom, 0px));
   z-index: 150;
   display: none;
   align-items: center;
@@ -927,7 +938,7 @@ h3,
 .site-footer {
   background: var(--ink);
   color: var(--white);
-  padding: 64px 0 28px;
+  padding: 64px 0 calc(28px + env(safe-area-inset-bottom, 0px));
 }
 
 .footer-grid {
@@ -1042,6 +1053,8 @@ h3,
 
   .nav-toggle {
     display: flex;
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .nav-menu {
@@ -1091,6 +1104,12 @@ h3,
     margin-top: 10px;
   }
 
+  /* ≥16px input text stops iOS from auto-zooming on focus */
+  .form-row input,
+  .form-row select {
+    font-size: 16px;
+  }
+
   .visit-grid {
     grid-template-columns: 1fr;
   }
@@ -1109,6 +1128,15 @@ h3,
   .section-head {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  /* Hero calls-to-action stack full-width for easier thumb taps */
+  .hero-cta {
+    flex-direction: column;
+  }
+
+  .hero-cta .btn {
+    width: 100%;
   }
 
   .form-row-split {
@@ -1145,12 +1173,110 @@ h3,
   }
 }
 
+/* Extra-small phones */
+@media (max-width: 480px) {
+  .float-card {
+    padding: 10px 12px 10px 10px;
+    gap: 10px;
+  }
+
+  .float-avatar,
+  .float-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .float-title {
+    font-size: 0.84rem;
+  }
+
+  .float-card-top {
+    top: -14px;
+    left: 6px;
+  }
+
+  .float-card-bottom {
+    right: 6px;
+  }
+
+  .demo-label {
+    display: none;
+  }
+
+  .demo-toggle {
+    padding-left: 6px;
+  }
+}
+
 /* Heavy backdrop-filter causes scroll jank on phones; use solid-ish bg instead */
 @media (max-width: 768px) {
   .site-header {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     background: rgba(251, 247, 241, 0.97);
+  }
+}
+
+/* Short landscape screens (phones rotated) — keep the hero on one screen */
+@media (max-height: 480px) and (orientation: landscape) {
+  .hero {
+    padding-top: 24px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1.05fr 0.95fr;
+    padding-bottom: 40px;
+  }
+
+  .hero-copy h1 {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+  }
+
+  .hero-copy .lead {
+    font-size: 1rem;
+    margin-bottom: 18px;
+  }
+
+  .hero-cta {
+    margin-bottom: 16px;
+  }
+
+  .hero-trust {
+    gap: 10px 18px;
+    font-size: 0.85rem;
+  }
+
+  .hero-visual {
+    max-width: 340px;
+  }
+}
+
+/* Touch devices: drop hover lift so taps never leave cards "stuck" raised */
+@media (hover: none) {
+  .btn:hover {
+    transform: none;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent);
+    box-shadow: 0 12px 26px rgba(226, 96, 60, 0.35);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--line);
+  }
+
+  .why-card:hover,
+  .service-card:hover,
+  .review-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .service-card:hover .service-img img,
+  .gallery-grid figure:hover img {
+    transform: none;
   }
 }
 
