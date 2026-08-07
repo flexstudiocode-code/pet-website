@@ -1,6 +1,6 @@
 {
   "brand": {
-    "name": "Paw & Glow"
+    "name": "Paw Patrol"
   },
   "city": "Kochi",
   "tagline": "Gentle, modern grooming for dogs and cats in Kannur,Kerala",
@@ -200,8 +200,5 @@
     "Nail & Paw Care",
     "Breed Styling"
   ],
-  "_meta": {
-    "version": 1,
-    "lastEdited": "2026-08-07 16:49:03"
-  }
+  "lastEdited": "2026-08-07 17:58:16"
 }
