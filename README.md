@@ -24,16 +24,25 @@ installer in `deploy/` (`setup_server.sh`, systemd unit, keep-alive cron).
 
 ## Handing the site to a client
 
-1. **Change the admin passcode** — edit `admin-secret.json`:
+1. **Change the admin passcode** — set it in one go so it works on both the
+   server and static hosting:
 
-   ```json
-   { "passcode": "choose-a-strong-one" }
+   ```bash
+   python set-passcode.py choose-a-strong-one
    ```
 
-   (The file is created automatically on first run with the default
-   `pawandglow`. It is git-ignored and never sent to the browser.)
+   This updates `admin-secret.json` (server mode, git-ignored) and
+   `admin-gate.json` (SHA-256 gate used on static hosts like Vercel — this
+   one is committed). To change it manually, edit both files with the same
+   passcode.
 
 2. Give the client the admin URL and the passcode.
+
+   The login screen is now required everywhere. On a static host the
+   passcode check runs in the browser against `admin-gate.json` — that is a
+   casual-access gate, not real security (the hash ships with the site). For
+   real protection, use the server mode (VPS) or put `/admin` behind
+   authentication.
 
 3. The client edits text, prices, photos, hours, services and reviews in the
    editor, presses **Save changes**, and the live site updates instantly.
@@ -52,6 +61,10 @@ installer in `deploy/` (`setup_server.sh`, systemd unit, keep-alive cron).
   - `POST /api/upload` — photo uploads, saved to `uploads/`
 - **`admin/index.html`** — the client editor at `/admin` (login, sections, add/remove/reorder
   cards, photo upload, export/import JSON, and GitHub publishing under **Publishing**).
+- **`set-passcode.py`** — `python set-passcode.py <new>` keeps the server and
+  static-host passcodes in sync.
+- **`admin-gate.json`** — SHA-256 passcode gate for the editor on static hosts
+  (committed; sync with `set-passcode.py`).
 
 ## Static hosting without Python
 

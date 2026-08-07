@@ -20,9 +20,11 @@ Endpoints
 Passcode
 --------
 Stored in admin-secret.json (created automatically on first run with the
-default "pawandglow"). CHANGE IT before handing the site to a client:
+default "pawandglow"). CHANGE IT before handing the site to a client.
+Use the one-command helper so both files stay in sync (the static-hosting
+gate in admin-gate.json is committed, so it must match):
 
-    {"passcode": "your-own-secret"}
+    python set-passcode.py your-own-secret
 
 Security note: the passcode is sent over HTTP. Use this behind the
 Cloudflare tunnel for demo purposes, or put it behind HTTPS/authentication

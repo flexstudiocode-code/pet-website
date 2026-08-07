@@ -120,16 +120,7 @@
           .then(function (content) {
             state.serverMode = false;
             state.content = content;
-            enterEditor();
-            if (state.github) {
-              toast("Static hosting detected — Save now commits changes to GitHub", "ok");
-            } else {
-              showStaticBanner();
-              toast(
-                "This host can't save directly — connect GitHub in Publishing to make Save publish your edits",
-                "err"
-              );
-            }
+            startLogin();
           })
           .catch(function () {
             toast("Could not load content.json", "err");
@@ -137,9 +128,47 @@
       });
   }
 
+  /* Verify the passcode. Server mode checks against the server API;
+     static mode (no server) checks a SHA-256 hash shipped in
+     admin-gate.json — a casual-access gate, not real security. */
+  function verifyPasscode(code) {
+    if (state.serverMode) {
+      return api("/api/verify", { passcode: code });
+    }
+    return fetch("/admin-gate.json", { cache: "no-store" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("no gate file");
+        return r.json();
+      })
+      .then(function (gate) {
+        return sha256hex(code).then(function (hex) {
+          var ok = !!gate.sha256 && hex === String(gate.sha256).toLowerCase();
+          return {
+            ok: ok,
+            status: ok ? 200 : 401,
+            data: { error: ok ? null : "wrong passcode" }
+          };
+        });
+      })
+      .catch(function () {
+        return { ok: false, status: 503, data: { error: "gate unavailable" } };
+      });
+  }
+
+  function sha256hex(str) {
+    var buf = new TextEncoder().encode(str);
+    return crypto.subtle.digest("SHA-256", buf).then(function (hashBuf) {
+      return Array.prototype.map
+        .call(new Uint8Array(hashBuf), function (b) {
+          return ("0" + b.toString(16)).slice(-2);
+        })
+        .join("");
+    });
+  }
+
   function startLogin() {
     if (state.passcode) {
-      api("/api/verify", { passcode: state.passcode }).then(function (res) {
+      verifyPasscode(state.passcode).then(function (res) {
         if (res.ok) {
           enterEditor();
         } else {
@@ -159,11 +188,14 @@
     $("#loginForm").addEventListener("submit", function (e) {
       e.preventDefault();
       var code = $("#passcode").value.trim();
-      api("/api/verify", { passcode: code }).then(function (res) {
+      verifyPasscode(code).then(function (res) {
         if (res.ok) {
           state.passcode = code;
           sessionStorage.setItem("cmsPasscode", code);
           enterEditor();
+        } else if (res.status === 503) {
+          $("#loginError").textContent =
+            "This editor is locked — the passcode check isn't available here (static hosts need HTTPS and the admin-gate.json file).";
         } else {
           $("#loginError").textContent = "That passcode isn't right — try again.";
           $("#passcode").select();
@@ -179,6 +211,17 @@
     populate();
     bindUI();
     markDirty(false);
+    if (!state.serverMode) {
+      if (state.github) {
+        toast("Static hosting detected — Save now commits changes to GitHub", "ok");
+      } else {
+        showStaticBanner();
+        toast(
+          "This host can't save directly — connect GitHub in Publishing to make Save publish your edits",
+          "err"
+        );
+      }
+    }
   }
 
   /* ---------------- form <-> state ---------------- */
